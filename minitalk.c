@@ -49,18 +49,10 @@ void send_bit(char *str, int pid)
 		{
 			i--;
 			if (arr[i] == 0)
-			{
-
-				printf("%d\n", arr[i]);
-				kill(SIGUSR1, pid);
-			}
+				kill(pid, SIGUSR1);
 			else
-			{
-				printf("\npid = %d\n",pid);
-
-				printf("%d\n", arr[i]);
-				kill(SIGUSR2, pid);
-			}
+				kill(pid, SIGUSR2);
+			usleep(400);
 		}
 		j++;
 	}
