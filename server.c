@@ -47,11 +47,20 @@ void	ft_putnbr(int n)
 	ft_putchar((n % 10) + '0');
 }
 
-void	get_bit(int sig)
+void	get_bit(int sig, siginfo_t *info, void *c_info)
 {
 	static int				i = 8;
 	static unsigned char	c;
+	static int c_pid;
 
+	(void)c_info;
+	if (c_pid != info->si_pid)
+	{
+		i = 8;
+		c = 0;
+		c_pid = info->si_pid;
+	}
+	c_pid = info->si_pid;
 	i--;
 	if (sig == SIGUSR1)
 		c = c + 0;
@@ -70,7 +79,7 @@ int	main(void)
 	int	pid;
 	struct sigaction sig;
 
-	sig.sa_handler = get_bit;
+	sig.sa_sigaction = get_bit;
 	sigaction(SIGUSR1, &sig, NULL);
 	sigaction(SIGUSR2, &sig, NULL);
 	sigemptyset(&sig.sa_mask);
