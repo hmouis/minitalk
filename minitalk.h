@@ -13,13 +13,9 @@
 #ifndef MINITALK_H
 # define MINITALK_H
 
-#include <signal.h>
-#include <stdlib.h>
-#include <stdio.h>
-#include <unistd.h>
-
-void send_bit(char *str, int pid);
-int ft_atoi(char *str);
-void minitalk(pid_t pid, char *str);
+# include <signal.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <unistd.h>
 
 #endif

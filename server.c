@@ -11,9 +11,10 @@
 /* ************************************************************************** */
 
 #include "minitalk.h"
-int power(int n)
+
+int	power(int n)
 {
-	int i;
+	int	i;
 
 	i = 1;
 	while (n > 0)
@@ -24,10 +25,32 @@ int power(int n)
 	return (i);
 }
 
-void get_bit(int sig)
+void	ft_putchar(char c)
 {
-	static int i = 8;
-	static unsigned char c;
+	write(1, &c, 1);
+}
+
+void	ft_putnbr(int n)
+{
+	if (n == -2147483648)
+	{
+		write(1, "-2147483648", 11);
+		return ;
+	}
+	if (n < 0)
+	{
+		n *= -1;
+		write(1, "-", 1);
+	}
+	if (n >= 10)
+		ft_putnbr(n / 10);
+	ft_putchar((n % 10) + '0');
+}
+
+void	get_bit(int sig)
+{
+	static int				i = 8;
+	static unsigned char	c;
 
 	i--;
 	if (sig == SIGUSR1)
@@ -36,18 +59,25 @@ void get_bit(int sig)
 		c = c + power(i);
 	if (i == 0)
 	{
-		write (1, &c, 1);
+		write(1, &c, 1);
 		c = 0;
 		i = 8;
 	}
 }
 
-int main()
+int	main(void)
 {
-	int pid = getpid();
-	printf("%d\n", pid);
-	signal (SIGUSR1, get_bit);
-	signal (SIGUSR2, get_bit);
+	int	pid;
+	struct sigaction sig;
+
+	sig.sa_handler = get_bit;
+	sigaction(SIGUSR1, &sig, NULL);
+	sigaction(SIGUSR2, &sig, NULL);
+	sigemptyset(&sig.sa_mask);
+
+	pid = getpid();
+	ft_putnbr(pid);
+
 	while (1)
 		pause();
 }

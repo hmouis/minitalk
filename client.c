@@ -16,57 +16,60 @@ int	ft_atoi(char *str)
 {
 	int	i;
 	int	result;
+	int	sign;
 
 	i = 0;
+	sign = 1;
 	result = 0;
-
+	if (str[i] == '-' || str[i] == '+')
+	{
+		if (str[i] == '-')
+			sign = -1;
+		i++;
+	}
 	while (str[i] != '\0' && (str[i] >= '0' && str[i] <= '9'))
 	{
 		result = result * 10 + (str[i] - '0');
 		i++;
 	}
-	return (result);
+	return (result * sign);
 }
 
-void send_bit(char *str, int pid)
+void	send_bit(char *str, int pid)
 {
-	unsigned char c;
-	int i;
-	int arr[8];
-	int j;
+	unsigned char	c;
+	int				arr[8];
+
+	int (i), (j);
 	j = 0;
 	while (str[j])
 	{
-		c = str[j];
+		c = str[j++];
 		i = 0;
-		while (i < 8)
+		while (i++ < 8)
 		{
 			arr[i] = c % 2;
 			c /= 2;
-			i++;
 		}
-		while (i > 0)
+		while (--i > 0)
 		{
-			i--;
 			if (arr[i] == 0)
 				kill(pid, SIGUSR1);
 			else
 				kill(pid, SIGUSR2);
 			usleep(400);
 		}
-		j++;
 	}
 }
 
-int main(int ac, char **av)
+int	main(int ac, char **av)
 {
-	pid_t pid;
+	pid_t	pid;
 
-	if (ac == 3) 
+	if (ac == 3)
 	{
 		pid = ft_atoi(av[1]);
 		send_bit(av[2], pid);
 	}
-
 	return (0);
 }

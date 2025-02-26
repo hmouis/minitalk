@@ -1,7 +1,7 @@
 NAME = client
 srv = server
 
-CSRC = minitalk.c
+CSRC = client.c
 SSRC =  server.c
 
 CC = cc
