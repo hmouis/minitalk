@@ -25,13 +25,10 @@ int	power(int n)
 	return (i);
 }
 
-void	ft_putchar(char c)
-{
-	write(1, &c, 1);
-}
-
 void	ft_putnbr(int n)
 {
+	char c;
+
 	if (n == -2147483648)
 	{
 		write(1, "-2147483648", 11);
@@ -44,14 +41,15 @@ void	ft_putnbr(int n)
 	}
 	if (n >= 10)
 		ft_putnbr(n / 10);
-	ft_putchar((n % 10) + '0');
+	c = (n % 10) + '0';
+	write(1, &c, 1);
 }
 
 void	get_bit(int sig, siginfo_t *info, void *c_info)
 {
 	static int				i = 8;
 	static unsigned char	c;
-	static int c_pid;
+	static int				c_pid;
 
 	(void)c_info;
 	if (c_pid != info->si_pid)
@@ -60,7 +58,6 @@ void	get_bit(int sig, siginfo_t *info, void *c_info)
 		c = 0;
 		c_pid = info->si_pid;
 	}
-	c_pid = info->si_pid;
 	i--;
 	if (sig == SIGUSR1)
 		c = c + 0;
@@ -68,7 +65,10 @@ void	get_bit(int sig, siginfo_t *info, void *c_info)
 		c = c + power(i);
 	if (i == 0)
 	{
-		write(1, &c, 1);
+		if (c == 0)
+			kill(c_pid, SIGUSR1);
+		else
+			write(1, &c, 1);
 		c = 0;
 		i = 8;
 	}
@@ -76,17 +76,15 @@ void	get_bit(int sig, siginfo_t *info, void *c_info)
 
 int	main(void)
 {
-	int	pid;
-	struct sigaction sig;
+	int					pid;
+	struct sigaction	sig;
 
 	sig.sa_sigaction = get_bit;
 	sigaction(SIGUSR1, &sig, NULL);
 	sigaction(SIGUSR2, &sig, NULL);
 	sigemptyset(&sig.sa_mask);
-
 	pid = getpid();
 	ft_putnbr(pid);
-
 	while (1)
 		pause();
 }

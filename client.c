@@ -21,12 +21,17 @@ int	ft_atoi(char *str)
 	i = 0;
 	sign = 1;
 	result = 0;
-	if (str[i] == '-' || str[i] == '+')
+	while (str[i] && (str[i] < '0' || str[i] > '9'))
 	{
-		if (str[i] == '-')
-			sign = -1;
+		if (str[i] == '-' || str[i] == '+')
+		{
+			if (str[i] == '-')
+				sign = -1;
+		}
 		i++;
 	}
+	if (str[i] == '\0')
+		return (1);
 	while (str[i] != '\0' && (str[i] >= '0' && str[i] <= '9'))
 	{
 		result = result * 10 + (str[i] - '0');
@@ -35,7 +40,7 @@ int	ft_atoi(char *str)
 	return (result * sign);
 }
 
-void	send_bit(char *str, int pid)
+void	send_str(char *str, int pid)
 {
 	unsigned char	c;
 	int				arr[8];
@@ -44,7 +49,7 @@ void	send_bit(char *str, int pid)
 	j = 0;
 	while (str[j])
 	{
-		c = str[j++];
+		c = str[j];
 		i = 0;
 		while (i++ < 8)
 		{
@@ -57,19 +62,38 @@ void	send_bit(char *str, int pid)
 				kill(pid, SIGUSR1);
 			else
 				kill(pid, SIGUSR2);
-			usleep(600);
+			usleep(500);
 		}
+		j++;
 	}
+}
+
+void handle(int sig)
+{
+	(void)sig;
+	write(1, "recived\n", 8);
 }
 
 int	main(int ac, char **av)
 {
 	pid_t	pid;
+	int i;
 
+	i = 0;
 	if (ac == 3)
 	{
+		signal(SIGUSR1, handle);
 		pid = ft_atoi(av[1]);
-		send_bit(av[2], pid);
+		if (pid == 1 || kill(pid, 0) == -1)
+			return (1);	
+		send_str(av[2], pid);
+		i = 0;
+		while (i < 8)
+		{
+			kill(pid, SIGUSR1);
+			usleep(500);
+			i++;
+		}
 	}
 	return (0);
 }
