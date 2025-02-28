@@ -1,30 +1,44 @@
 NAME = client
 srv = server
+BNAME = client_bonus
+bsrv = server_bonus
 
-CSRC = client.c
-SSRC =  server.c
+MCSRC = client.c
+MSSRC = server.c
+BCSRC = client_bonus.c
+BSSRC =  server_bonus.c
 
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -g 
 
-COBJS = $(CSRC:.c=.o)
-SOBJS = $(SSRC:.c=.o)
+MCOBJS = $(MCSRC:.c=.o)
+MSOBJS = $(MSSRC:.c=.o)
+BCOBJS = $(BCSRC:.c=.o)
+BSOBJS = $(BSSRC:.c=.o)
 
 all: $(NAME) $(srv)
 
-$(NAME): $(COBJS)
+bonus: $(BNAME) $(bsrv)
+
+$(NAME): $(MCOBJS)
 	$(CC) $(CFLAGS) $^ -o $@
 
-$(srv): $(SOBJS)
+$(srv): $(MSOBJS)
+	$(CC) $(CFLAGS) $^ -o $@
+
+$(BNAME): $(BCOBJS)
+	$(CC) $(CFLAGS) $^ -o $@
+
+$(bsrv): $(BSOBJS)
 	$(CC) $(CFLAGS) $^ -o $@
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(COBJS) $(SOBJS)
+	rm -f $(MCOBJS) $(BCOBJS) $(BSOBJS) $(MSOBJS)
 
 fclean: clean
-	rm -f $(NAME) $(srv)
+	rm -f $(NAME) $(srv) $(BNAME) $(bsrv)
 
 re: fclean all

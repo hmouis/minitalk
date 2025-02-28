@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   client.c                                           :+:      :+:    :+:   */
+/*   client_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmouis <hmouis@1337.ma>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/20 13:08:09 by hmouis            #+#    #+#             */
-/*   Updated: 2025/02/28 20:11:02 by hmouis           ###   ########.fr       */
+/*   Created: 2025/02/28 20:09:39 by hmouis            #+#    #+#             */
+/*   Updated: 2025/02/28 20:10:07 by hmouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	ft_atoi(char *str)
 
 	i = 0;
 	result = 0;
-	while (str[i] && str[i] >= '0' && str[i] <= '9')
+	while (str[i] != '\0' && (str[i] >= '0' && str[i] <= '9'))
 	{
 		result = result * 10 + (str[i] - '0');
 		i++;
@@ -57,17 +57,32 @@ void	send_str(char *str, int pid)
 	}
 }
 
+void handle(int sig)
+{
+	(void)sig;
+	write(1, "recived\n", 8);
+}
+
 int	main(int ac, char **av)
 {
 	pid_t	pid;
+	int i;
 
+	i = 0;
 	if (ac == 3)
 	{
+		signal(SIGUSR1, handle);
 		pid = ft_atoi(av[1]);
-		printf("pid = %d",pid);
 		if (pid == -1 || kill(pid, 0) == -1)
 			return (1);	
 		send_str(av[2], pid);
+		i = 0;
+		while (i < 8)
+		{
+			kill(pid, SIGUSR1);
+			usleep(500);
+			i++;
+		}
 	}
 	return (0);
 }
