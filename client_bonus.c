@@ -57,7 +57,7 @@ void	send_str(char *str, int pid)
 	}
 }
 
-void handle(int sig)
+void	handle(int sig)
 {
 	(void)sig;
 	write(1, "recived\n", 8);
@@ -66,15 +66,15 @@ void handle(int sig)
 int	main(int ac, char **av)
 {
 	pid_t	pid;
-	int i;
+	int		i;
 
 	i = 0;
 	if (ac == 3)
 	{
 		signal(SIGUSR1, handle);
 		pid = ft_atoi(av[1]);
-		if (pid == -1 || kill(pid, 0) == -1)
-			return (1);	
+		if (pid == -1 || kill(pid, 0) == -1 || av[2][0] == '\0')
+			return (1);
 		send_str(av[2], pid);
 		i = 0;
 		while (i < 8)

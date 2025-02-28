@@ -27,7 +27,7 @@ int	power(int n)
 
 void	ft_putnbr(int n)
 {
-	char c;
+	char	c;
 
 	if (n == -2147483648)
 	{
@@ -88,4 +88,3 @@ int	main(void)
 	while (1)
 		pause();
 }
-

@@ -27,7 +27,7 @@ int	power(int n)
 
 void	ft_putnbr(int n)
 {
-	char c;
+	char	c;
 
 	if (n == -2147483648)
 	{
@@ -65,7 +65,7 @@ void	get_bit(int sig, siginfo_t *info, void *c_info)
 		c = c + power(i);
 	if (i == 0)
 	{
-			write(1, &c, 1);
+		write(1, &c, 1);
 		c = 0;
 		i = 8;
 	}

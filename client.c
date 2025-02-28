@@ -64,9 +64,8 @@ int	main(int ac, char **av)
 	if (ac == 3)
 	{
 		pid = ft_atoi(av[1]);
-		printf("pid = %d",pid);
-		if (pid == -1 || kill(pid, 0) == -1)
-			return (1);	
+		if (av[2][0] == '\0' || pid == -1 || kill(pid, 0) == -1)
+			return (1);
 		send_str(av[2], pid);
 	}
 	return (0);
