@@ -84,7 +84,9 @@ int	main(void)
 	sigaction(SIGUSR2, &sig, NULL);
 	sigemptyset(&sig.sa_mask);
 	pid = getpid();
+	write(1, "pid = ", 6);
 	ft_putnbr(pid);
+	write(1, "\n", 1);
 	while (1)
 		pause();
 }
