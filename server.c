@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: hmouis <hmouis@1337.ma>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/20 13:32:00 by hmouis            #+#    #+#             */
-/*   Updated: 2025/02/28 20:11:29 by hmouis           ###   ########.fr       */
+/*   Created: 2025/02/28 20:10:12 by hmouis            #+#    #+#             */
+/*   Updated: 2025/02/28 20:10:39 by hmouis           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,10 @@ void	get_bit(int sig, siginfo_t *info, void *c_info)
 		c = c + power(i);
 	if (i == 0)
 	{
-		write(1, &c, 1);
+		if (c == 0)
+			kill(c_pid, SIGUSR1);
+		else
+			write(1, &c, 1);
 		c = 0;
 		i = 8;
 	}
@@ -73,8 +76,8 @@ void	get_bit(int sig, siginfo_t *info, void *c_info)
 
 int	main(void)
 {
-	int					pid;
-	struct sigaction	sig;
+	pid_t					pid;
+	struct sigaction		sig;
 
 	sig.sa_sigaction = get_bit;
 	sigaction(SIGUSR1, &sig, NULL);
